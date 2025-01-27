@@ -37,46 +37,42 @@ char *int_to_binary(int t)
 		j++;
 	}
 	str[j] = '\0';
-	printf("===%s", str);
+//	printf("===%s", str);
 		return str;
 
 }
-void sendonec(pid_t pid, char *s)
+void sendonec(pid_t pid, char s)
 {
 	int i = 0;
 	int t = 0;
 	char *s1;
 
-	s1 = malloc(strlen(s)*4 + 1);
-	s1[0] = '\0';
-	while(s[t])
-	{
-		strcat(s1, int_to_binary(s[t]));
-		t++;
-	}
-	t = 0;
+	s1 = int_to_binary(s);
 	while(s1[i])
 	{
 		if(s1[i] == '1')
 		{
 			kill(pid, SIGUSR1);
-			write(1,"rec1", 4);
 		}
 		else
 		{
 			kill(pid, SIGUSR2);
-			write(1, "REC2", 4);
 		}
-		usleep(100);
+		usleep(500);
 		i++;
 	}
-	free(s1);
+}
+void handler()
+{
+	return;
 }
 int main(int ac, char **av)
 {
 	pid_t t = 0;
 	int i = 0;
-
+	int k = 0;
+	
+	signal(SIGUSR1, handler);
 	if(ac > 1)
 	{
 		while(av[1][i] != '\0')
@@ -84,7 +80,11 @@ int main(int ac, char **av)
 			t = t * 10 + (av[1][i] - '0');
 			i++;
 		}
-		sendonec(t, av[2]);
+		while(av[2][k])
+		{
+			sendonec(t, av[2][k]);
+			k++;
+		}
 	}
 	
 }

@@ -18,6 +18,7 @@ void sighandler(int signum, siginfo_t *info, void *context)
 {
 	static char ptr[8];
 	static int p = 0;
+	pid_t t = info->si_pid;
 	if(p < 8)
 	{
 		if (signum == SIGUSR1)
@@ -32,12 +33,9 @@ void sighandler(int signum, siginfo_t *info, void *context)
 		char c = (char)btod(ptr);
 		write(1, &c, 1);
 		p = 0;
-	}/*
-	if (signum == SIGUSR1)
-		write(1, "1", 1);
-	if (signum == SIGUSR2)
-		write(1, "0", 1);
-		*/
+	}
+	usleep(50);
+	kill(t, SIGUSR1);
 }
 
 void sig2()
