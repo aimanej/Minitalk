@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *int_to_binary(int t)
+volatile sig_atomic_t sigstatus = 0;
+
+char *int_to_binary(unsigned char t)
 {
 	char *str;
 	char re[12];
@@ -44,7 +46,6 @@ char *int_to_binary(int t)
 void sendonec(pid_t pid, char s)
 {
 	int i = 0;
-	int t = 0;
 	char *s1;
 
 	s1 = int_to_binary(s);
@@ -58,12 +59,17 @@ void sendonec(pid_t pid, char s)
 		{
 			kill(pid, SIGUSR2);
 		}
-		usleep(500);
+		while(!sigstatus)
+		{
+			usleep(50);
+		}
+		sigstatus = 0;
 		i++;
 	}
 }
 void handler()
 {
+	sigstatus = 1;
 	return;
 }
 int main(int ac, char **av)

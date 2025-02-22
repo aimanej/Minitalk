@@ -34,7 +34,7 @@ void sighandler(int signum, siginfo_t *info, void *context)
 		write(1, &c, 1);
 		p = 0;
 	}
-	usleep(50);
+//	usleep(50);
 	kill(t, SIGUSR1);
 }
 
