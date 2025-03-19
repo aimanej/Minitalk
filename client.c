@@ -61,7 +61,6 @@ void sendonec(pid_t pid, char s)
 		}
 		while(!sigstatus)
 		{
-			usleep(50);
 		}
 		sigstatus = 0;
 		i++;
