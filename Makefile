@@ -13,14 +13,14 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	ar rcs $@ $^
 
-%.o: %.cc
+%.o: %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
 	rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(OBJS $(NAME))
+	rm -f $(OBJS) $(NAME)
 
 re: fclean all
 
