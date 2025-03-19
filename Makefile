@@ -2,25 +2,31 @@ cc = cc
 
 CFLAGS = -Werror -Wall -Wextra
 
-NAME = printf.a
+CLIENT = client
+SERVER = server
 
-SRCS = client.c server.c
+CLIENT_SRCS = client.c
+SERVER_SRCS = server.c
 
-OBJS = $(SRCS:.c=.o)
+CLIENT_OBJ = $(CLIENT_SRC:.c=.o)
+SERVER_OBJ = $(SERVER_SRC:.c=.o)
 
-all: $(NAME)
+all: $(CLIENT) $(SERVER)
 
-$(NAME): $(OBJS)
-	ar rcs $@ $^
+$(CLIENT): $(CLIENT_OBJ)
+	$(CC) $(CFLAGS) -o $(CLIENT) $(CLIENT_OBJ)
+
+$(SERVER): $(SERVER_OBJ)
+	$(CC) $(CFLAGS) -o $(SERVER) $(SERVER_OBJ)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(CLIENT_OBJ) $(SERVER_OBJ)
 
 fclean: clean
-	rm -f $(OBJS) $(NAME)
+	rm -f $(CLIENT) $(SERVER)
 
 re: fclean all
 
