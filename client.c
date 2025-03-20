@@ -6,21 +6,12 @@
 
 volatile sig_atomic_t sigstatus = 0;
 
-char *int_to_binary(unsigned char t)
+void	int_to_binary(char *str, unsigned char t)
 {
-	char *str;
 	char re[12];
 	int i = 0;
 	int j = 0;
-	str = malloc(9);
-	if(!str)
-		return NULL;
-	if(t == 0)
-	{
-		str[0] = '0';
-		str[1] = '\0';
-		return str;
-	}
+
 	while(t > 0)
 	{
 		re[i] = (t % 2) + 48;
@@ -39,16 +30,13 @@ char *int_to_binary(unsigned char t)
 		j++;
 	}
 	str[j] = '\0';
-//	printf("===%s", str);
-		return str;
-
 }
 void sendonec(pid_t pid, char s)
 {
 	int i = 0;
-	char *s1;
+	char s1[9];
 
-	s1 = int_to_binary(s);
+	int_to_binary(s1, s);
 	while(s1[i])
 	{
 		if(s1[i] == '1')
@@ -71,6 +59,18 @@ void handler()
 	sigstatus = 1;
 	return;
 }
+
+int checker(char *str)
+{
+	int t = 0;
+	while(str[t])
+	{
+		if(!(str[t] >= '0' && str[t] <= '9'))
+			return 0;
+		t++;
+	}
+	return 1;
+}
 int main(int ac, char **av)
 {
 	pid_t t = 0;
@@ -80,6 +80,8 @@ int main(int ac, char **av)
 	signal(SIGUSR1, handler);
 	if(ac > 1)
 	{
+		if(!checker(av[1]))
+			return;
 		while(av[1][i] != '\0')
 		{
 			t = t * 10 + (av[1][i] - '0');

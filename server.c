@@ -18,7 +18,13 @@ void sighandler(int signum, siginfo_t *info, void *context)
 {
 	static char ptr[8];
 	static int p = 0;
-	pid_t t = info->si_pid;
+	static pid_t t;
+	(void) context;
+	if(t != info->si_pid)
+	{
+		p = 0;
+	}
+	t = info->si_pid;
 	if(p < 8)
 	{
 		if (signum == SIGUSR1)
