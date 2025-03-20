@@ -81,7 +81,7 @@ int main(int ac, char **av)
 	if(ac > 1)
 	{
 		if(!checker(av[1]))
-			return;
+			return 1;
 		while(av[1][i] != '\0')
 		{
 			t = t * 10 + (av[1][i] - '0');

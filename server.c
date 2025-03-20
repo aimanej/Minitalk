@@ -1,6 +1,4 @@
 #include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 int btod(char *str)
@@ -21,9 +19,7 @@ void sighandler(int signum, siginfo_t *info, void *context)
 	static pid_t t;
 	(void) context;
 	if(t != info->si_pid)
-	{
 		p = 0;
-	}
 	t = info->si_pid;
 	if(p < 8)
 	{
@@ -40,25 +36,23 @@ void sighandler(int signum, siginfo_t *info, void *context)
 		write(1, &c, 1);
 		p = 0;
 	}
-//	usleep(50);
-	kill(t, SIGUSR1);
-}
-
-void sig2()
-{
-	write(1, "0", 1);
+	if(kill(t, SIGUSR1) == -1)
+		return ;
 }
 
 int main()
 {
 	int t = 0;
 	char pp[12];
-	struct sigaction sa = {0};
-
+	struct sigaction sa;
+	
+	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sighandler;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	if(sigaction(SIGUSR1, &sa, NULL) == -1)
+		return 0;
+	if(sigaction(SIGUSR2, &sa, NULL) == -1)
+		return 0;
 	pid_t pid = getpid();
 	while(pid > 0)
 	{
@@ -71,8 +65,7 @@ int main()
 		write(1, &pp[t], 1);
 		t--;
 	}
-	write(1, "--->", 4);
-
+	write(1, "\n", 1);
 	while (1)
 	{
 		pause();
